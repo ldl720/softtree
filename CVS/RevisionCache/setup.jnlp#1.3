@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jnlp codebase="http://www.deeplogic.com.ar/sis/dl/" href="setup.jnlp" spec="1.0+">
+  <information>
+    <title>Configurador DeepLogic S.R.L.</title>
+    <vendor>DeepLogic S.R.L.</vendor>
+    <homepage href="http://www.deeplogic.com.ar/"/>
+    <description>Configuracion Sistema Comercial DeepLogic S.R.L.</description>
+    <description kind="short">Configurador DeepLogic</description>
+    <icon href="softtreeSetup32.png" height="32" width="32" kind="default"/>
+    <icon href="softtreeSetup48.png" height="48" width="48" kind="default"/>
+    <icon href="softtreeSetup64.png" height="64" width="64" kind="default"/>
+    <shortcut online="false">
+      <desktop/>
+      <menu submenu="Sistemas DeepLogic\DL"/>
+    </shortcut>
+  </information>
+  <security>
+    <all-permissions/>
+  </security>
+  <update check="timeout" policy="always"/>
+  <resources>
+    <j2se version="1.6+"/>
+    <jar href="dl.jar" main="true" download="eager"/>
+    <jar href="lib/libClass.jar"/>
+    <jar href="lib/jasperreports-4.0.2.jar"/>
+		<jar href="lib/jasperreports-fonts-4.0.2.jar"/>
+		<jar href="lib/commons-beanutils-1.8.0.jar"/>
+		<jar href="lib/commons-collections-2.1.1.jar"/>
+		<jar href="lib/commons-digester-1.7.jar"/>
+		<jar href="lib/commons-logging-1.0.4.jar"/>
+		<jar href="lib/groovy-all-1.7.5.jar"/>
+		<jar href="lib/iText-2.1.7.jar"/>
+		<jar href="lib/png-encoder-1.5.jar"/>
+		<jar href="lib/poi-3.6.jar"/>
+		<jar href="lib/splashWindow.jar"/>
+		<jar href="lib/PgsLookAndFeel.jar"/>
+		<jar href="lib/swingx-1.6.jar"/>
+		<jar href="lib/jxlayer.jar"/>
+		<jar href="lib/batik-all.jar"/>
+		<jar href="lib/xml-apis-ext.jar"/>
+		<jar href="lib/mysql-connector-java-5.1.12-bin.jar"/>
+		<jar href="lib/AbsoluteLayout.jar"/>
+		<jar href="lib/swing-layout-1.0.4.jar"/>
+		<extension name="jnlpcomponent1" href="jnlpcomponent1.jnlp"/>
+  </resources>
+  <application-desc main-class="dl.Main">
+    <argument>setup</argument>
+  </application-desc>
+</jnlp>

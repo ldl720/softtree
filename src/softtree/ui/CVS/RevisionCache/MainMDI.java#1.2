@@ -1,0 +1,126 @@
+package softtree.ui;
+
+import java.awt.BorderLayout;
+import java.net.URL;
+import java.util.ResourceBundle;
+import javax.swing.JOptionPane;
+import libClass.obj.ObjectApplication;
+import libClass.swing.frame.FormMdi;
+import libClass.swing.panel.ToolBarPanel;
+import libClass.swing.toolBar.ABMToolBar;
+import libClass.swing.toolBar.QueryToolBar;
+import libClass.util.UtilitiesSeveral;
+import softtree.swing.toolBar.VariosToolBar;
+
+/**
+ * 
+ * @author Leandro López
+ * @version $Revision: 1.2 $; $Date: 2012/02/14 14:18:18 $
+ */
+public class MainMDI extends FormMdi {
+
+	private ABMToolBar abmToolBar = null;
+
+	private VariosToolBar variosToolBar = null;
+
+	private QueryToolBar queryToolBar = null;
+
+	private ToolBarPanel panelToolBar = null;
+
+	public MainMDI() throws NullPointerException {
+		super();
+		initComponents();
+	}
+
+	public MainMDI(String aTitle) {
+		super(aTitle);
+
+		initComponents();
+	}
+
+	public MainMDI(URL aUrlImage) throws NullPointerException {
+		super(aUrlImage, false);
+
+		initComponents();
+	}
+
+	public MainMDI(String aTitle, URL aUrlImage) throws NullPointerException {
+		super(aTitle, aUrlImage, false);
+
+		initComponents();
+	}
+
+	public ToolBarPanel getPanelToolBar() {
+		return panelToolBar;
+	}
+
+	public void setPanelToolBar(ToolBarPanel aPanelToolBar) {
+		panelToolBar = aPanelToolBar;
+	}
+
+	public ABMToolBar getAbmToolBar() {
+		return abmToolBar;
+	}
+
+	public void setAbmToolBar(ABMToolBar aAbmToolBar) {
+		abmToolBar = aAbmToolBar;
+	}
+
+	public VariosToolBar getVariosToolBar() {
+		return variosToolBar;
+	}
+
+	public void setVariosToolBar(VariosToolBar aVariosToolBar) {
+		variosToolBar = aVariosToolBar;
+	}
+
+	public QueryToolBar getQueryToolBar() {
+		return queryToolBar;
+	}
+
+	public void setQueryToolBar(QueryToolBar aQueryToolBar) {
+		queryToolBar = aQueryToolBar;
+	}
+
+	/**
+	 * Este m�todo indica lo que se debe hacer cunado el formulario es cerrado.
+	 * Sobreescribe el metodo cerrarForm() de la clase <code>Form</code>.
+	 *
+	 * @see libClass.formularios.Form
+	 */
+	@Override
+	public void cerrarForm() {
+		Object[] options = {"Si", "No"};
+
+		int option = UtilitiesSeveral.showOptionDialog(
+			"¿Esta seguro que desea cerrar el Sistema?",
+			options, options[0]);
+
+		if (option == JOptionPane.YES_OPTION) {
+			this.setVisible(false);
+			this.dispose();
+			ObjectApplication.killApplication();
+		}
+	}
+
+	private void initComponents() {
+
+		ResourceBundle rbToolBars = ObjectApplication.getResourceToolBars();
+
+		setVariosToolBar(new VariosToolBar(rbToolBars, getEscritorio()));
+		setAbmToolBar(new ABMToolBar(rbToolBars, getEscritorio()));
+		setQueryToolBar(new QueryToolBar(rbToolBars, getEscritorio()));
+
+		setPanelToolBar(new ToolBarPanel());
+
+		getPanelToolBar().addToolBar(getVariosToolBar());
+		getPanelToolBar().addToolBar(getAbmToolBar());
+		getPanelToolBar().addToolBar(getQueryToolBar());
+
+		addToolBar(getVariosToolBar());
+		addToolBar(getAbmToolBar());
+		addToolBar(getQueryToolBar());
+
+		getContentPane().add(getPanelToolBar(), BorderLayout.NORTH);
+	}
+}

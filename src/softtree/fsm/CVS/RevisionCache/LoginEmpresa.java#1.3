@@ -1,0 +1,134 @@
+package softtree.fsm;
+
+import java.sql.SQLException;
+import softtree.Main;
+import softtree.ui.MainMDI;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import javax.swing.JOptionPane;
+import libClass.conec.ConexionBdg;
+import libClass.exceptions.ConstructorSelectException;
+import libClass.exceptions.DBClosedException;
+import libClass.exceptions.InvalidDateException;
+import libClass.exceptions.NotFoundException;
+import libClass.fsm.Empresa;
+import libClass.fsm.EmpresaPConexion;
+import libClass.fsm.Usuario;
+import libClass.obj.ObjectApplication;
+import libClass.swing.ILogin;
+import libClass.util.ErrorDetection;
+import libClass.util.GenericLogin;
+import splashwindow.windows.DefaultSplashWindow;
+
+/**
+ *
+ * @author López Leandro
+ */
+public class LoginEmpresa extends GenericLogin implements ILogin {
+
+	public LoginEmpresa(ConexionBdg con, ResourceBundle rb,
+		Class aClassForNodePreferences, boolean aRemoteConnection) {
+
+		setConexionDBSistema(con);
+		setRemoteConnection(aRemoteConnection);
+		setClassForNodePreferences(aClassForNodePreferences);
+		setRecursos(rb);
+		initWorkWithEnterprise();
+		controlAccessOfUser();
+	}
+
+	public LoginEmpresa(ConexionBdg con, ResourceBundle rb,
+		Class aClassForNodePreferences, boolean aApplet, boolean aRemoteConnection) {
+
+		setApplet(aApplet);
+		setConexionDBSistema(con);
+		setRemoteConnection(aRemoteConnection);
+		setClassForNodePreferences(aClassForNodePreferences);
+		setRecursos(rb);
+		initWorkWithEnterprise();
+		controlAccessOfUser();
+	}
+
+	private ResourceBundle getRecursosToolBars() {
+		ResourceBundle recursos = null;
+
+		try {
+			java.util.Locale locale = new java.util.Locale("es");
+			String archivoRecursos = "softtree.archivos.toolBars";
+			recursos = ResourceBundle.getBundle(archivoRecursos, locale);
+		} catch(MissingResourceException e) {
+			ErrorDetection.writeLog(e);
+			String msgMessage = getRecursos().getString("msgCriticalError")
+				+ "\n" + "CODIGO ERROR: " + ErrorDetection.getErrorCode(e);
+
+			JOptionPane.showMessageDialog(
+				null,
+				msgMessage,
+				"ERROR",
+				JOptionPane.ERROR_MESSAGE);
+
+			cancelApplication();
+		}
+
+		return recursos;
+	}
+
+	/**
+	 * La implementación de este método es la encargada de decirle a la
+	 * clase que se debe hacer en el caso de que un curso de acción se haya
+	 * realizado correctamente.
+	 */
+	@Override
+	public void startApplication() throws ConstructorSelectException,
+		NotFoundException, NullPointerException, DBClosedException, SQLException, InvalidDateException {
+
+		if (getEmpresaPConexion() != null) {
+			boolean flagConec = initConectToDBEnterprise(getEmpresaPConexion());
+
+			if (flagConec) {
+				//Cierro la conexión activa a la base de datos de datos de sistem
+				//porque a partir de este punto no se la utiliza mas.
+				closeConnectDBSystem();
+
+				ObjectApplication application = new ObjectApplication(
+					getConexionDBEmpresa(), getRecursos(), getRecursosToolBars(), Main.class);
+
+				String login = getEmpresaPConexion().getUsuarioPConexion().getLogin();
+				String passwd = getEmpresaPConexion().getUsuarioPConexion().getPassword();
+
+				application.setActiveEnterprise(new Empresa(1));
+				application.setUsuario(new Usuario(login, passwd));
+				application.setApplet(isApplet());
+				application.startCheckConnection();
+
+				MainMDI mainMDI = new MainMDI(getEmpresaPConexion().getNombre(), getURLFileWallpaper(getEmpresaPConexion()));
+				mainMDI.setVisible(true);
+			} else {
+				cancelApplication();
+			}
+		} else {
+			cancelApplication();
+		}
+	}
+
+	@Override
+	public void cancelApplication() {
+		super.cancelApplication();
+
+		if (DefaultSplashWindow.getInstance() != null) {
+			DefaultSplashWindow.getInstance().close();
+		}
+
+		System.exit(0);
+	}
+
+	@Override
+	public void setSelectedEnterprise(EmpresaPConexion aSelectedEnterprise) {
+		setEmpresaPConexion(aSelectedEnterprise);
+	}
+
+	@Override
+	public Object getObjISystemIdentification() {
+		return new EmpresaPConexion();
+	}
+}

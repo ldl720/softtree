@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jnlp codebase="http://localhost:8080/sis/softtree/" href="setup.jnlp" spec="1.0+">
+	<information>
+		<title>SoftTree S.R.L.</title>
+		<vendor>SoftTree S.R.L.</vendor>
+		<homepage href="http://www.deeplogic.com.ar/"/>
+		<description>Sistema comercial SoftTree.</description>
+		<description kind="short">SoftTree S.R.L.</description>
+		<icon href="softtreeSetup32.png" height="32" width="32" kind="default"/>
+		<icon href="softtreeSetup48.png" height="48" width="48" kind="default"/>
+		<icon href="softtreeSetup64.png" height="64" width="64" kind="default"/>
+		<shortcut online="false">
+			<desktop/>
+			<menu submenu="Sistemas SoftTree\SoftTree"/>
+		</shortcut>
+	</information>
+	<security>
+		<all-permissions/>
+	</security>
+	<update check="timeout" policy="always"/>
+	<resources>
+		<j2se version="1.7+"/>
+		<jar href="softtree.jar" main="true" download="eager"/>
+		<jar href="lib/libClass.jar"/>
+		<jar href="lib/jasperreports-5.5.1.jar"/>
+		<jar href="lib/jasperreports-fonts-5.5.1.jar"/>
+		<jar href="lib/commons-beanutils-1.8.0.jar"/>
+		<jar href="lib/commons-collections-2.1.1.jar"/>
+		<jar href="lib/commons-digester-2.1.jar"/>
+		<jar href="lib/commons-logging-1.1.1.jar"/>
+		<jar href="lib/groovy-all-2.0.1.jar"/>
+		<jar href="lib/iText-2.1.7.js2.jar"/>
+		<jar href="lib/png-encoder-1.5.jar"/>
+		<jar href="lib/poi-3.7-20101029.jar"/>
+		<jar href="lib/servlet-api-2.4.jar"/>
+		<jar href="lib/splashWindow.jar"/>
+		<jar href="lib/PgsLookAndFeel-1.1.1.jar"/>
+		<jar href="lib/swingx-all-1.6.5-1.jar"/>
+		<jar href="lib/batik-all.jar"/>
+		<jar href="lib/xml-apis-ext.jar"/>
+		<jar href="lib/mysql-connector-java-5.1.18-bin.jar"/>
+		<jar href="lib/AbsoluteLayout.jar"/>
+		<jar href="lib/beansbinding-1.2.1.jar"/>
+		<jar href="lib/commons-dbcp-1.4.jar"/>
+		<jar href="lib/commons-pool-1.6.jar"/>
+		<jar href="lib/TableLayout-20050920.jar"/>
+		<jar href="lib/mydoggy-api-1.5.0.jar"/>
+		<jar href="lib/mydoggy-plaf-1.5.0.jar"/>
+		<jar href="lib/mydoggy-res-1.5.0.jar"/>
+	</resources>
+	<application-desc main-class="softtree.Main">
+		<argument>setup</argument>
+	</application-desc>
+</jnlp>

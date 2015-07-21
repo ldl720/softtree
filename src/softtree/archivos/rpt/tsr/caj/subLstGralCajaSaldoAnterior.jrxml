@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subLstGralCajaSaldoAnterior" pageWidth="559" pageHeight="842" columnWidth="559" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="ID_SUCURSAL" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new Integer(1)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ID_USUARIO_DESDE" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ID_USUARIO_HASTA" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new Integer(999)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CONCILIADO" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new Integer(2)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FECHA" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[java.util.Calendar.getInstance().getTime()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PTOVTA_DESDE" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PTOVTA_HASTA" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+  SUM(CASE cajconcep.SumRes
+    WHEN 1 THEN cajmovimientos.Importe
+    WHEN 2 THEN - cajmovimientos.Importe
+    END) saldoAnterior
+FROM cajmovimientos
+LEFT JOIN cajconcep ON
+  (cajmovimientos.IdConcepto = cajconcep.Id)
+WHERE
+  cajmovimientos.IdSucursal = $P{ID_SUCURSAL} AND
+  IF($P{ID_USUARIO_DESDE} is null, cajmovimientos.UsuCodigo >= 0, cajmovimientos.UsuCodigo >= $P{ID_USUARIO_DESDE}) AND
+  IF($P{ID_USUARIO_HASTA} is null, cajmovimientos.UsuCodigo <= 999, cajmovimientos.UsuCodigo <= $P{ID_USUARIO_HASTA}) AND
+  IF($P{PTOVTA_DESDE} is null, (cajmovimientos.NroPuestoVta is not null OR cajmovimientos.NroPuestoVta >= 0), cajmovimientos.NroPuestoVta >= $P{PTOVTA_DESDE}) AND
+  IF($P{PTOVTA_HASTA} is null, (cajmovimientos.NroPuestoVta is not null OR cajmovimientos.NroPuestoVta <= 9999), cajmovimientos.NroPuestoVta <= $P{PTOVTA_HASTA}) AND
+  cajmovimientos.Importe > 0 AND
+  cajmovimientos.FecMovimiento < $P{FECHA}
+GROUP BY cajmovimientos.IdSucursal]]>
+	</queryString>
+	<field name="saldoAnterior" class="java.lang.Double"/>
+	<variable name="SALDO_ANTERIOR" class="java.lang.Float" resetType="None">
+		<variableExpression><![CDATA[new Float($F{saldoAnterior}.floatValue())]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<textField pattern="¤ ###,##0.00" isBlankWhenNull="true">
+				<reportElement key="textField-11" x="238" y="0" width="76" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true" pdfFontName="Courier"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{saldoAnterior} != null ? $F{saldoAnterior} : new Double(0)]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="textField" x="0" y="0" width="238" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true" pdfFontName="Courier"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["SALDO ACUMULADO ANTERIOR AL " + ((String)libClass.swing.formats.Formato.ddMMyyyy.format($P{FECHA})).toUpperCase() + ":"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

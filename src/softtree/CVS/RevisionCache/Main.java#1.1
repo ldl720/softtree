@@ -1,0 +1,241 @@
+package softtree;
+
+import softtree.fsm.LoginEmpresa;
+import java.io.File;
+import java.net.URL;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import javax.swing.JOptionPane;
+import libClass.conec.ConexionBdg;
+import libClass.conec.ParametrosConexionBdg;
+import libClass.obj.ObjectURLApplication;
+import libClass.swing.UtilityLibraryLookAndFeels;
+import libClass.util.ErrorDetection;
+import libClass.util.UtilitiesSeveral;
+import libClass.util.ui.InitialParams;
+import libClass.util.ui.UIConfigInitialParam;
+import splashwindow.windows.DefaultSplashWindow;
+
+/**
+ *
+ * @author López Leandro
+ */
+public class Main {
+
+	private InitialParams initialParams = null;
+
+	private ResourceBundle recursos = null;
+
+	private ConexionBdg conexion = null;
+
+	public Main() {
+		initMain(false);
+	}
+
+	public Main(boolean aApplet) {
+		initMain(aApplet);
+	}
+
+	public InitialParams getInitialParams() {
+		return initialParams;
+	}
+
+	public void setInitialParams(InitialParams aInitialParams) {
+		initialParams = aInitialParams;
+	}
+
+	public ResourceBundle getRecursos() {
+		return recursos;
+	}
+
+	public void setRecursos(ResourceBundle aRecursos) {
+		recursos = aRecursos;
+	}
+
+	public ConexionBdg getConexion() {
+		return conexion;
+	}
+
+	public void setConexion(ConexionBdg aConexion) {
+		conexion = aConexion;
+	}
+
+	/**
+	 * @param args the command line arguments
+	 */
+	public static void main(String[] args) {
+		boolean setup = false;
+
+		if (args.length != 0) {
+			for (int i = 0; i < args.length; i++) {
+				String param = args[i];
+				param.trim();
+
+				if (param.equals("setup")) {
+					setup = true;
+				}
+			}
+		}
+
+		if (setup) {
+			new UIConfigInitialParam(Main.class).setVisible(true);
+		} else {
+			new Main();
+		}
+	}
+
+	private void initMain(boolean aApplet) {
+		InitialParams aParams = new InitialParams(this.getClass());
+		aParams.readParameter();
+
+		setInitialParams(aParams);
+
+		if (getInitialParams().getIpServer() == null) {
+			JOptionPane.showMessageDialog(
+				null,
+				"Controle la configuración inicial del sistema.\n" +
+				"No aparece o esta mal cargado el Host del Servidor.",
+				"ERROR DETECTADO",
+				JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		if (getInitialParams().getIpServer().trim().length() == 0) {
+			JOptionPane.showMessageDialog(
+				null,
+				"Controle la configuración inicial del sistema.\n" +
+				"No aparece o esta mal cargado el Host del Servidor.",
+				"ERROR DETECTADO",
+				JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		if (getInitialParams().getPort() == 0) {
+			JOptionPane.showMessageDialog(
+				null,
+				"Controle la configuración inicial del sistema.\n" +
+				"No aparece o esta mal cargado el Puerto de \n" +
+				"comunicación con el Servidor.",
+				"ERROR DETECTADO",
+				JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		if (getInitialParams().getDbName() == null) {
+			JOptionPane.showMessageDialog(
+				null,
+				"Controle la configuración inicial del sistema.\n" +
+				"No aparece o esta mal cargado el Nombre de la\n" +
+				"Base De Datos.",
+				"ERROR DETECTADO",
+				JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		if (getInitialParams().getDbName().trim().length() == 0) {
+			JOptionPane.showMessageDialog(
+				null,
+				"Controle la configuración inicial del sistema.\n" +
+				"No aparece o esta mal cargado el Nombre de la\n" +
+				"Base De Datos.",
+				"ERROR DETECTADO",
+				JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		new DefaultSplashWindow(5);
+
+		try {
+			initErrorDetection();
+			initLookAndFeel();
+			initRecursos();
+			initConectDB();
+
+			DefaultSplashWindow.getInstance().setProgressText("Inicializando Aplicación...");
+			ObjectURLApplication obj = new ObjectURLApplication(
+				this.getClass(), getRecursos().getString("dirFile"), getRecursos().getString("dirXML"));
+			DefaultSplashWindow.getInstance().incrementProgressBarValue(1);
+
+			DefaultSplashWindow.getInstance().close();
+
+			new LoginEmpresa(getConexion(), getRecursos(), this.getClass(), aApplet, getInitialParams().isRemoteConnect());
+		} catch (Exception e) {
+			UtilitiesSeveral.showErrorDialog("La aplicación no pudo inicial correctamente.", e);
+		}
+	}
+
+	private void initErrorDetection() throws Exception {
+		DefaultSplashWindow.getInstance().setProgressText("Cargando Detección De Errores...");
+
+		URL aUrl = null;
+
+		if (getInitialParams().getLogDir() != null) {
+			if (getInitialParams().getLogDir().trim().length() > 0) {
+				File aFile = new File(getInitialParams().getLogDir());
+
+				if (aFile.exists()) {
+					if (aFile.isDirectory()) {
+						aUrl = aFile.toURI().toURL();
+					}
+				}
+			}
+		}
+
+		if (aUrl != null) {
+			new ErrorDetection(new Locale("es"), "dl.archivos.errors", aUrl);
+		} else {
+			new ErrorDetection(new Locale("es"), "dl.archivos.errors");
+		}
+
+		DefaultSplashWindow.getInstance().incrementProgressBarValue(1);
+	}
+
+	private void initLookAndFeel() throws Exception {
+		DefaultSplashWindow.getInstance().setProgressText("Cargando Look&Feels...");
+
+		if ((getInitialParams().getNameLookAndFeel() != null) && (getInitialParams().getNameThemeLookAndFeel() != null)) {
+			UtilityLibraryLookAndFeels.installLookAndFeel(
+				getInitialParams().getNameLookAndFeel(),
+				getInitialParams().getNameThemeLookAndFeel());
+		} else {
+			UtilityLibraryLookAndFeels.installLookAndFeel(
+				UtilityLibraryLookAndFeels.LF_METAL,
+				UtilityLibraryLookAndFeels.THEME_METAL_OCEAN);
+		}
+
+		DefaultSplashWindow.getInstance().incrementProgressBarValue(1);
+	}
+
+	private void initConectDB() throws Exception {
+
+		DefaultSplashWindow.getInstance().setProgressText("Conectando Base De Datos...");
+
+		ParametrosConexionBdg param = new ParametrosConexionBdg();
+		param.setTipoConexion("JDBC");
+		param.setProveedor(ConexionBdg.DB_MYSQL31);
+		param.setSvrName(getInitialParams().getIpServer());
+		param.setPuertoDB(getInitialParams().getPort());
+		param.setNombreDB(getInitialParams().getDbName());
+		param.setNombreUsuario(getInitialParams().getUser());
+		param.setPassword(getInitialParams().getPwd());
+
+		ConexionBdg con = new ConexionBdg(param);
+
+		if (!con.estaAbierta()) {
+			new Exception("No Se Pudo Inicializar La Conexion A La Base De Datos");
+		}
+
+		setConexion(con);
+
+		DefaultSplashWindow.getInstance().incrementProgressBarValue(1);
+	}
+
+	private void initRecursos() throws Exception {
+		DefaultSplashWindow.getInstance().setProgressText("Cargando Archivo De Recursos...");
+
+		String archivoRecursos = "dl.archivos.dl";
+		setRecursos(ResourceBundle.getBundle(archivoRecursos));
+
+		DefaultSplashWindow.getInstance().incrementProgressBarValue(1);
+	}
+}

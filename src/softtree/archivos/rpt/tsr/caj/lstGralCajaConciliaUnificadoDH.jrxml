@@ -1,0 +1,779 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="lstGralCajaDetallado" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" scriptletClass="libClass.archivos.rpt.tsr.caj.lstGralCajaConciliaScriptlet">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<style name="Heading 1" isDefault="false" markup="none" fontSize="24" isBold="false" isItalic="true" pdfFontName="Helvetica-Bold"/>
+	<style name="Crosstab Data Text" isDefault="false" hAlign="Center"/>
+	<parameter name="LISTA_FILTROS" class="java.util.List" isForPrompting="false"/>
+	<parameter name="URL_RPT_FILTROS" class="java.net.URL" isForPrompting="false"/>
+	<parameter name="OBSERVACIONES" class="java.lang.Boolean" isForPrompting="false"/>
+	<parameter name="SUBTITULO" class="java.lang.String"/>
+	<parameter name="ACUMULADO" class="java.lang.Boolean" isForPrompting="false"/>
+	<parameter name="CONCILIADO" class="java.lang.Integer"/>
+	<parameter name="ID_USUARIO_DESDE" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="ID_USUARIO_HASTA" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\sis\\libClass\\src\\libClass\\archivos\\rpt\\tsr\\caj\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_CONNECTION" class="java.sql.Connection" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[SELECT
+  cajmovimientos.Conciliado ,
+  fsmsucurs.Descripcion DesSucur ,
+  cajmovimientos.FecMovimiento ,
+  cajmovimientos.IdConcepto ,
+  cajmovimientos.DescriConcep DesConcep ,
+  fsmcompro.TipCompAbv ,
+  cajmovimientos.Letra ,
+  cajmovimientos.NroPuestoVta ,
+  cajmovimientos.NroMovimiento ,
+  cajmovimientos.NomCuenta ,
+  cajmovimientos.Importe ,
+  cajconcep.SumRes ,
+  IF(cajconcep.SumRes = 1, cajmovimientos.Importe, 0) Debe ,
+  IF(cajconcep.SumRes = 2, cajmovimientos.Importe, 0) Haber ,
+  fsmusuario.UsuNombre ,
+  cajmovimientos.Observacion ,
+  cajmovimientos.IdSucursal ,
+  cajmovimientos.Id ,
+  cajconcep.IdTipoValor ,
+  cajconcep.IdMoneda ,
+  cajvaltipo.Descripcion DescriValTipo ,
+  fsmmoneda.Descripcion DescriMoneda 
+FROM
+  cajmovimientos 
+LEFT JOIN fsmsucurs ON 
+  (cajmovimientos.IdSucursal = fsmsucurs.IdSucursal) 
+LEFT JOIN fsmusuario ON 
+  (cajmovimientos.UsuCodigo = fsmusuario.UsuCodigo) 
+LEFT JOIN cajconcep ON 
+  (cajmovimientos.IdConcepto = cajconcep.Id) 
+LEFT JOIN fsmcompro ON 
+  (cajmovimientos.IdTipCompro = fsmcompro.IdTipCompro) 
+LEFT JOIN cajvaltipo ON 
+  (cajconcep.IdTipoValor = cajvaltipo.Id) 
+LEFT JOIN fsmmoneda ON 
+  (cajconcep.IdMoneda = fsmmoneda.IdMoneda) 
+WHERE
+  cajmovimientos.Conciliado = 0 AND 
+  cajmovimientos.FecConciliacion IS NULL 
+ORDER BY
+  cajmovimientos.IdSucursal ,
+  cajmovimientos.FecMovimiento ,
+  cajmovimientos.IdConcepto]]>
+	</queryString>
+	<field name="Conciliado" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="DesSucur" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="FecMovimiento" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="IdConcepto" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="DesConcep" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TipCompAbv" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Letra" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NroPuestoVta" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NroMovimiento" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NomCuenta" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Importe" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="SumRes" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Debe" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Haber" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="UsuNombre" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Observacion" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="IdSucursal" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Id" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="IdTipoValor" class="java.lang.Integer"/>
+	<field name="IdMoneda" class="java.lang.Integer"/>
+	<field name="DescriValTipo" class="java.lang.String"/>
+	<field name="DescriMoneda" class="java.lang.String"/>
+	<variable name="saldoAnterior" class="java.lang.Float" resetType="Group" resetGroup="sucursal"/>
+	<variable name="impTotalFecha" class="java.lang.Float" resetType="Group" resetGroup="fechaMovimiento" calculation="Sum">
+		<variableExpression><![CDATA[$F{SumRes}.equals(new Integer(1)) ? $F{Importe} : new Float(($F{Importe}.floatValue() * -1))]]></variableExpression>
+	</variable>
+	<variable name="saldoPosterior" class="java.lang.Float" resetType="Group" resetGroup="sucursal" calculation="System">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="impTotalSucursal" class="java.lang.Float" resetType="Group" resetGroup="sucursal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SumRes}.equals(new Integer(1)) ? $F{Importe} : new Float(($F{Importe}.floatValue() * -1))]]></variableExpression>
+	</variable>
+	<group name="sucursal">
+		<groupExpression><![CDATA[$F{IdSucursal}]]></groupExpression>
+		<groupHeader>
+			<band height="16" splitType="Stretch">
+				<rectangle>
+					<reportElement key="rectangle-1" mode="Opaque" x="0" y="0" width="551" height="16" forecolor="#999999" backcolor="#999999"/>
+				</rectangle>
+				<staticText>
+					<reportElement key="staticText-2" mode="Transparent" x="1" y="1" width="70" height="14"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Caja Sucursal:]]></text>
+				</staticText>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField-1" mode="Transparent" x="74" y="1" width="477" height="14"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isItalic="false" pdfFontName="Helvetica"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{DesSucur}]]></textFieldExpression>
+				</textField>
+				<subreport>
+					<reportElement stretchType="RelativeToTallestObject" x="0" y="16" width="551" height="0">
+						<printWhenExpression><![CDATA[$P{ACUMULADO}]]></printWhenExpression>
+					</reportElement>
+					<subreportParameter name="ID_USUARIO_DESDE">
+						<subreportParameterExpression><![CDATA[$P{ID_USUARIO_DESDE}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="FECHA">
+						<subreportParameterExpression><![CDATA[$F{FecMovimiento}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="ID_USUARIO_HASTA">
+						<subreportParameterExpression><![CDATA[$P{ID_USUARIO_HASTA}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="CONCILIADO">
+						<subreportParameterExpression><![CDATA[$P{CONCILIADO}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="ID_SUCURSAL">
+						<subreportParameterExpression><![CDATA[$F{IdSucursal}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{SUBREPORT_CONNECTION}]]></connectionExpression>
+					<returnValue subreportVariable="SALDO_ANTERIOR" toVariable="saldoAnterior"/>
+					<subreportExpression class="java.net.URL"><![CDATA[libClass.obj.ObjectURLApplication.getURLFile("rpt/tsr/caj/subLstGralCajaConsiliaSaldoAnterior.jasper")]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20" splitType="Stretch">
+				<subreport isUsingCache="true" runToBottom="false">
+					<reportElement stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="0" y="0" width="551" height="0" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[$P{ACUMULADO}]]></printWhenExpression>
+					</reportElement>
+					<subreportParameter name="FECHA">
+						<subreportParameterExpression><![CDATA[$F{FecMovimiento}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="ID_USUARIO_DESDE">
+						<subreportParameterExpression><![CDATA[$P{ID_USUARIO_DESDE}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="ID_USUARIO_HASTA">
+						<subreportParameterExpression><![CDATA[$P{ID_USUARIO_HASTA}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="CONCILIADO">
+						<subreportParameterExpression><![CDATA[$P{CONCILIADO}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="ID_SUCURSAL">
+						<subreportParameterExpression><![CDATA[$F{IdSucursal}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{SUBREPORT_CONNECTION}]]></connectionExpression>
+					<returnValue subreportVariable="SaldoPosteriorSub" toVariable="saldoPosterior" calculation="Sum"/>
+					<subreportExpression class="java.net.URL"><![CDATA[libClass.obj.ObjectURLApplication.getURLFile("rpt/tsr/caj/subLstGralCajaConsiliaSaldoPosterior.jasper")]]></subreportExpression>
+				</subreport>
+				<line>
+					<reportElement positionType="FixRelativeToBottom" x="0" y="0" width="551" height="1"/>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement positionType="FixRelativeToBottom" x="0" y="2" width="334" height="16"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{DesSucur} != null ? ("TOTAL GENERAL SUCURAL " + $F{DesSucur}.trim().toUpperCase() + ":") : null]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Report" pattern="¤ ###,##0.00" isBlankWhenNull="true">
+					<reportElement positionType="FixRelativeToBottom" x="337" y="2" width="54" height="16"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Float"><![CDATA[$V{saldoPosterior} != null ? new Float($V{impTotalSucursal}.floatValue() + $V{saldoPosterior}.floatValue()) : $V{impTotalSucursal}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement positionType="FixRelativeToBottom" x="0" y="19" width="551" height="1"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="fechaMovimiento">
+		<groupExpression><![CDATA[$F{FecMovimiento}]]></groupExpression>
+		<groupHeader>
+			<band height="32" splitType="Stretch">
+				<rectangle>
+					<reportElement key="rectangle-2" mode="Opaque" x="0" y="0" width="551" height="18" forecolor="#CCCCCC" backcolor="#CCCCCC"/>
+				</rectangle>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement key="textField" x="0" y="2" width="551" height="14"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Trebuchet MS" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["MOVIMIENTOS DEL " + ((String)libClass.swing.formats.Formato.EEEEE_dd_MMMMM_yyyy.format($F{FecMovimiento})).toUpperCase() + "."]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement key="line-4" x="0" y="20" width="551" height="1" forecolor="#CCCCCC" backcolor="#CCCCCC"/>
+				</line>
+				<staticText>
+					<reportElement key="staticText-8" x="0" y="21" width="100" height="10"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Trebuchet MS" size="8"/>
+					</textElement>
+					<text><![CDATA[A Nombre De]]></text>
+				</staticText>
+				<line>
+					<reportElement key="line-10" x="101" y="20" width="1" height="12" forecolor="#CCCCCC" backcolor="#CCCCCC"/>
+				</line>
+				<staticText>
+					<reportElement key="staticText-8" x="104" y="21" width="120" height="10"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Trebuchet MS" size="8"/>
+					</textElement>
+					<text><![CDATA[Concepto]]></text>
+				</staticText>
+				<line>
+					<reportElement key="line-12" x="225" y="20" width="1" height="12" forecolor="#CCCCCC" backcolor="#CCCCCC"/>
+				</line>
+				<staticText>
+					<reportElement key="staticText-9" x="227" y="21" width="52" height="10"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Trebuchet MS" size="8"/>
+					</textElement>
+					<text><![CDATA[Debe]]></text>
+				</staticText>
+				<line>
+					<reportElement key="line-12" x="280" y="20" width="1" height="12" forecolor="#CCCCCC" backcolor="#CCCCCC"/>
+				</line>
+				<staticText>
+					<reportElement key="staticText-9" x="282" y="21" width="52" height="10"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Trebuchet MS" size="8"/>
+					</textElement>
+					<text><![CDATA[Haber]]></text>
+				</staticText>
+				<line>
+					<reportElement key="line-14" x="335" y="20" width="1" height="12" forecolor="#CCCCCC" backcolor="#CCCCCC"/>
+				</line>
+				<staticText>
+					<reportElement key="staticText-9" x="337" y="21" width="54" height="10"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Trebuchet MS" size="8"/>
+					</textElement>
+					<text><![CDATA[Acumulado]]></text>
+				</staticText>
+				<line>
+					<reportElement key="line-14" x="392" y="20" width="1" height="12" forecolor="#CCCCCC" backcolor="#CCCCCC"/>
+				</line>
+				<staticText>
+					<reportElement key="staticText-10" x="394" y="21" width="65" height="10"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Trebuchet MS" size="8"/>
+					</textElement>
+					<text><![CDATA[Usuario]]></text>
+				</staticText>
+				<line>
+					<reportElement key="line-2" mode="Opaque" x="0" y="31" width="551" height="1" forecolor="#CCCCCC" backcolor="#CCCCCC"/>
+				</line>
+				<line>
+					<reportElement key="line-14" x="460" y="20" width="1" height="12" forecolor="#CCCCCC" backcolor="#CCCCCC"/>
+				</line>
+				<staticText>
+					<reportElement key="staticText-10" x="462" y="21" width="89" height="10"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Trebuchet MS" size="8"/>
+					</textElement>
+					<text><![CDATA[Observaciones]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="16" splitType="Stretch">
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement key="textField-7" x="0" y="0" width="334" height="16"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Trebuchet MS" size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["TOTAL CIERRE DE CAJA DEL DÍA " + ((String)libClass.swing.formats.Formato.EEEEE_dd_MMMMM_yyyy.format($F{FecMovimiento})).toUpperCase() + ":"]]></textFieldExpression>
+				</textField>
+				<textField pattern="¤ ###,##0.00" isBlankWhenNull="true">
+					<reportElement key="textField" x="337" y="0" width="54" height="16"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Tahoma" size="8" isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Float"><![CDATA[$V{impTotalFecha}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="52" splitType="Stretch">
+			<staticText>
+				<reportElement key="staticText-1" style="Heading 1" x="0" y="0" width="551" height="32"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[Conciliación Movimientos de Caja Unificado Debe - Haber]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="32" width="551" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{SUBTITULO}]]></textFieldExpression>
+			</textField>
+			<subreport isUsingCache="true">
+				<reportElement key="subreport-1" stretchType="RelativeToTallestObject" x="0" y="52" width="551" height="0" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+				<subreportParameter name="LISTA_FILTROS">
+					<subreportParameterExpression><![CDATA[$P{LISTA_FILTROS}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LISTA_FILTROS})]]></dataSourceExpression>
+				<subreportExpression class="java.net.URL"><![CDATA[$P{URL_RPT_FILTROS}]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="12" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement key="textField" stretchType="RelativeToTallestObject" x="0" y="1" width="100" height="10"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NomCuenta}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement key="line-11" stretchType="RelativeToBandHeight" mode="Opaque" x="101" y="0" width="1" height="12" forecolor="#CCCCCC" backcolor="#CCCCCC"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement key="textField" stretchType="RelativeToTallestObject" x="104" y="1" width="120" height="10"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{DesConcep}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement key="line-13" stretchType="RelativeToBandHeight" mode="Opaque" x="225" y="0" width="1" height="12" forecolor="#CCCCCC" backcolor="#CCCCCC"/>
+			</line>
+			<textField pattern="¤ ###,##0.00" isBlankWhenNull="true">
+				<reportElement key="textField" stretchType="RelativeToTallestObject" x="227" y="1" width="52" height="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$F{Debe}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement key="line-13" stretchType="RelativeToBandHeight" mode="Opaque" x="280" y="0" width="1" height="12" forecolor="#CCCCCC" backcolor="#CCCCCC"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement key="textField" stretchType="RelativeToTallestObject" x="394" y="1" width="65" height="10"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{UsuNombre}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement key="line-15" stretchType="RelativeToBandHeight" mode="Opaque" x="335" y="0" width="1" height="12" forecolor="#CCCCCC" backcolor="#CCCCCC"/>
+			</line>
+			<textField pattern="¤ ###,##0.00" isBlankWhenNull="true">
+				<reportElement key="textField" stretchType="RelativeToTallestObject" x="282" y="1" width="52" height="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$F{Haber}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement key="line-15" stretchType="RelativeToBandHeight" mode="Opaque" x="392" y="0" width="1" height="12" forecolor="#CCCCCC" backcolor="#CCCCCC"/>
+			</line>
+			<textField pattern="¤ ###,##0.00" isBlankWhenNull="true">
+				<reportElement key="textField" stretchType="RelativeToTallestObject" x="337" y="1" width="54" height="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$V{impTotalFecha}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement key="line-15" stretchType="RelativeToBandHeight" mode="Opaque" x="460" y="0" width="1" height="12" forecolor="#CCCCCC" backcolor="#CCCCCC"/>
+			</line>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="textField" stretchType="RelativeToTallestObject" x="462" y="1" width="89" height="10">
+					<printWhenExpression><![CDATA[new Boolean($P{OBSERVACIONES}.booleanValue() && ($F{Observacion} != null))]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font fontName="Trebuchet MS" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Observacion}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="19" splitType="Stretch">
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-2" x="0" y="0" width="210" height="19" forecolor="#000000"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement key="line-1" x="0" y="0" width="551" height="1" forecolor="#000000" backcolor="#FFFFFF"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-3" x="345" y="0" width="170" height="19" forecolor="#000000"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Página " + $V{PAGE_NUMBER} + " de "]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-4" mode="Transparent" x="515" y="0" width="36" height="19" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="209" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="551" height="26"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isItalic="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Totales Por Tipos De Valores]]></text>
+			</staticText>
+			<crosstab>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="26" width="551" height="114"/>
+				<rowGroup name="DescriValTipo" width="90">
+					<bucket>
+						<bucketExpression class="java.lang.String"><![CDATA[$F{DescriValTipo}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box leftPadding="0">
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="1" y="0" width="88" height="12"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="Trebuchet MS" size="8"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$V{DescriValTipo}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents>
+							<box>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="DesSucur" height="26" totalPosition="End">
+					<bucket>
+						<bucketExpression class="java.lang.String"><![CDATA[$F{DesSucur}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="70" height="26"/>
+								<textElement verticalAlignment="Middle">
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$V{DesSucur}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="70" height="26"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="8"/>
+								</textElement>
+								<text><![CDATA[Total Sucursales]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="ImporteMeasure" class="java.lang.Float" calculation="Sum">
+					<measureExpression><![CDATA[$F{SumRes}.equals(new Integer(1)) ? $F{Importe} : new Float(($F{Importe}.floatValue() * -1))]]></measureExpression>
+				</measure>
+				<crosstabCell width="70" height="12">
+					<cellContents>
+						<box>
+							<topPen lineWidth="0.5"/>
+							<leftPen lineWidth="0.5"/>
+							<bottomPen lineWidth="0.5"/>
+							<rightPen lineWidth="0.5"/>
+						</box>
+						<textField pattern="¤ ###,##0.00">
+							<reportElement style="Crosstab Data Text" x="1" y="0" width="68" height="12"/>
+							<textElement textAlignment="Right" verticalAlignment="Middle">
+								<font fontName="Trebuchet MS" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.Float"><![CDATA[$V{ImporteMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell height="25" rowTotalGroup="DescriValTipo">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<topPen lineWidth="0.5"/>
+							<leftPen lineWidth="0.5"/>
+							<bottomPen lineWidth="0.5"/>
+							<rightPen lineWidth="0.5"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25"/>
+							<textElement/>
+							<textFieldExpression class="java.lang.Float"><![CDATA[$V{ImporteMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="70" height="12" columnTotalGroup="DesSucur">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<topPen lineWidth="0.5"/>
+							<leftPen lineWidth="0.5"/>
+							<bottomPen lineWidth="0.5"/>
+							<rightPen lineWidth="0.5"/>
+						</box>
+						<textField pattern="¤ ###,##0.00">
+							<reportElement style="Crosstab Data Text" x="1" y="0" width="68" height="12"/>
+							<textElement textAlignment="Right" verticalAlignment="Middle">
+								<font fontName="Trebuchet MS" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.Float"><![CDATA[$V{ImporteMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="DescriValTipo" columnTotalGroup="DesSucur">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<topPen lineWidth="0.5"/>
+							<leftPen lineWidth="0.5"/>
+							<bottomPen lineWidth="0.5"/>
+							<rightPen lineWidth="0.5"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25"/>
+							<textElement/>
+							<textFieldExpression class="java.lang.Float"><![CDATA[$V{ImporteMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+			<staticText>
+				<reportElement x="0" y="140" width="551" height="26"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isItalic="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Totales Por Tipos De Moneda]]></text>
+			</staticText>
+			<crosstab>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="166" width="551" height="43"/>
+				<rowGroup name="DescriMoneda" width="90">
+					<bucket>
+						<bucketExpression class="java.lang.String"><![CDATA[$F{DescriMoneda}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="1" y="0" width="88" height="12"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$V{DescriMoneda}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="DesSucur" height="26" totalPosition="End">
+					<bucket>
+						<bucketExpression class="java.lang.String"><![CDATA[$F{DesSucur}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="1" y="0" width="68" height="26"/>
+								<textElement verticalAlignment="Middle">
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$V{DesSucur}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="70" height="26"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="8"/>
+								</textElement>
+								<text><![CDATA[Total Sucursales]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="ImporteMeasure" class="java.lang.Float" calculation="Sum">
+					<measureExpression><![CDATA[$F{SumRes}.equals(new Integer(1)) ? $F{Importe} : new Float(($F{Importe}.floatValue() * -1))]]></measureExpression>
+				</measure>
+				<crosstabCell width="70" height="12">
+					<cellContents>
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField pattern="¤ ###,##0.00">
+							<reportElement style="Crosstab Data Text" x="1" y="0" width="68" height="12"/>
+							<textElement textAlignment="Right" verticalAlignment="Middle">
+								<font size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.Float"><![CDATA[$V{ImporteMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell height="25" rowTotalGroup="DescriMoneda">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25"/>
+							<textElement/>
+							<textFieldExpression class="java.lang.Float"><![CDATA[$V{ImporteMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="70" height="12" columnTotalGroup="DesSucur">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField pattern="¤ ###,##0.00">
+							<reportElement style="Crosstab Data Text" x="1" y="0" width="68" height="12"/>
+							<textElement textAlignment="Right" verticalAlignment="Middle">
+								<font size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.Float"><![CDATA[$V{ImporteMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="DescriMoneda" columnTotalGroup="DesSucur">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25"/>
+							<textElement/>
+							<textFieldExpression class="java.lang.Float"><![CDATA[$V{ImporteMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+		</band>
+	</summary>
+</jasperReport>
